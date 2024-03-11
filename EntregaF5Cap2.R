@@ -20,7 +20,7 @@ dados$TempoDesenvolvimento <- sample(5:30, size = nrow(dados), replace = TRUE)
 
 cat("- - -\n")
 print("1. Análise Exploratória")
-
+## ex 1 
 # Médias para cada variável
 media_commits <- mean(dados$Commits)
 media_revisoes <- mean(dados$RevisoesCodigo)
@@ -41,7 +41,7 @@ cat("Mediana:", mediana_revisoes, "\n")
 cat("\nTempo de Desenvolvimento:\n")
 cat("Média:", media_tempo, "\n")
 cat("Mediana:", mediana_tempo, "\n\n")
-
+##ex 1 b
 # Calculando estatísticas descritivas para cada equipe
 estatisticas_por_equipe <- dados %>%
   group_by(Equipe) %>%
@@ -54,9 +54,11 @@ estatisticas_por_equipe <- dados %>%
     SDTempoDesenvolvimento = sd(TempoDesenvolvimento)
   )
 
+# Imprimindo a tabela completa
 print(estatisticas_por_equipe)
 
-
+#############
+##ex 2
 cat("- - -\n")
 print("2. Transformação e Criação de Variáveis")
 
@@ -80,6 +82,22 @@ media_revisoes_por_equipe <- dados %>%
 
 # Imprimindo o resultado
 print(media_revisoes_por_equipe)
+
+cat("\n")
+# Calculando a eficiência para cada equipe
+estatisticas_por_equipe$Eficiencia <- (estatisticas_por_equipe$MediaCommits * peso1) +
+  (estatisticas_por_equipe$MediaRevisoesCodigo * peso2) -
+  (1 / estatisticas_por_equipe$MediaTempoDesenvolvimento * peso3)
+
+# Tabela apenas com a eficiência
+tabela_eficiencia <- data.frame(
+  Equipe = estatisticas_por_equipe$Equipe,
+  Eficiencia = estatisticas_por_equipe$Eficiencia
+)
+
+# Imprimir a tabela
+print(tabela_eficiencia)
+
 
 
 
@@ -123,6 +141,13 @@ resultado_anova <- aov(TempoDesenvolvimento ~ Equipe, data = dados)
 summary(resultado_anova)
 
 print(dados$TempoDesenvolvimento)
+
+
+# Calcular a correlação entre revisões de código e tempo de desenvolvimento
+correlacao <- cor(dados$RevisoesCodigo, dados$TempoDesenvolvimento, method = "pearson")
+
+# Imprimir o coeficiente de correlação
+cat("Coeficiente de Correlação:", correlacao, "\n")
 
 cat("- - -\n")
 print("5. Interpretação e Conclusão:")
